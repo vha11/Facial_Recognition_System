@@ -1,0 +1,114 @@
+// schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// SQLite no soporta enums, usamos String con validación en el código
+model Usuario {
+  id            String   @id @default(uuid())
+  rol           String   // "ADMIN" o "EMPLEADO"
+  email         String?  @unique
+  hashPassword  String?
+  nombre        String
+  telefono      String?
+  puesto        String?
+  area          String?
+  activo        Boolean  @default(true)
+  fechaAlta     DateTime @default(now())
+  fechaBaja     DateTime?
+  creadoEn      DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
+
+  imagenes     Imagen[]
+  asistencias  Asistencia[]
+  horarios     Horario[]
+  excepciones  ExcepcionCalendario[]
+
+  @@index([rol])
+  @@index([activo])
+  @@index([nombre])
+}
+
+model Imagen {
+  id         String   @id @default(uuid())
+  usuarioId  String
+  uri        String
+  formato    String?
+  ancho      Int?
+  alto       Int?
+  hashSha256 String?
+  creadoEn   DateTime @default(now())
+
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  embedding Embedding?
+
+  @@index([usuarioId])
+  @@unique([usuarioId, uri])
+}
+
+model Embedding {
+  id        String   @id @default(uuid())
+  imagenId  String   @unique
+  modelo    String
+  version   String?
+  vector    Bytes
+  normaL2   Float?
+  creadoEn  DateTime @default(now())
+
+  imagen Imagen @relation(fields: [imagenId], references: [id], onDelete: Cascade)
+}
+
+model Asistencia {
+  id         String   @id @default(uuid())
+  usuarioId  String
+  tipo       String   // "ENTRADA" o "SALIDA"
+  timestamp  DateTime
+  confianza  Float
+  creadoEn   DateTime @default(now())
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId, timestamp])
+  @@index([timestamp])
+}
+
+model Horario {
+  id              String @id @default(uuid())
+  usuarioId       String
+  diaSemana       Int    // 0=Dom .. 6=Sab
+  horaEntradaProg String
+  horaSalidaProg  String
+  toleranciaMin   Int    @default(10)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId, diaSemana])
+}
+
+model Feriado {
+  id          String   @id @default(uuid())
+  fecha       DateTime
+  descripcion String?
+
+  @@unique([fecha])
+}
+
+model ExcepcionCalendario {
+  id        String   @id @default(uuid())
+  usuarioId String
+  fecha     DateTime
+  tipo      String   // "VACACION", "INCAPACIDAD", "PERMISO"
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId, fecha])
+}
+
+model Calendario {
+  fecha DateTime @id
+}

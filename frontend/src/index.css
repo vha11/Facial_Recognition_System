@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Sistema de diseño moderno con glassmorphism - Inspiración azul luminoso */
+
+@layer base {
+  :root {
+    /* Paleta principal moderna */
+    --app-bg-start: 211 67% 97%;    /* #F6FAFD - Blanco casi puro */
+    --app-bg-end: 205 53% 78%;      /* #B3CFE5 - Azul claro */
+    --app-navbar: 218 60% 13%;      /* #0A1931 - Azul marino fuerte */
+    --app-card-base: 0 0% 100%;     /* Blanco puro para glassmorphism */
+    --app-accent-start: 202 38% 47%; /* #4A7FA7 - Azul vivo */
+    --app-accent-end: 210 56% 25%;   /* #1A3D63 - Azul intermedio */
+    --app-text-primary: 218 60% 13%; /* #0A1931 - Azul marino para contraste */
+    --app-text-secondary: 189 11% 67%; /* #9BA8AB - Gris azulado neutro */
+    --app-text-light: 211 67% 97%;   /* #F6FAFD - Texto claro para fondos oscuros */
+    
+    /* Estados especiales con colores suaves */
+    --app-success: 142 69% 58%;      /* Verde éxito */
+    --app-error: 0 70% 50%;          /* Rojo desaturado */
+    --app-warning: 43 90% 50%;       /* Amarillo suave */
+    
+    /* Glassmorphism y efectos */
+    --glass-bg: rgba(255, 255, 255, 0.25);
+    --glass-border: rgba(255, 255, 255, 0.18);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    --blur-strength: 8px;
+    
+    /* Gradientes modernos */
+    --gradient-bg: linear-gradient(135deg, hsl(var(--app-bg-start)), hsl(var(--app-bg-end)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--app-accent-start)), hsl(var(--app-accent-end)));
+    --gradient-glass: linear-gradient(145deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+    
+    /* Sombras suaves y modernas */
+    --shadow-soft: 0 4px 20px rgba(31, 38, 135, 0.15);
+    --shadow-elevated: 0 10px 40px rgba(31, 38, 135, 0.2);
+    --shadow-floating: 0 20px 60px rgba(31, 38, 135, 0.25);
+    
+    /* Bordes redondeados grandes */
+    --radius-large: 24px;
+    --radius-xl: 32px;
+    
+    /* Transiciones suaves */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    /* Mapeo al sistema de shadcn */
+    --background: var(--app-bg-start);
+    --foreground: var(--app-text-primary);
+    --card: var(--app-card-base);
+    --card-foreground: var(--app-text-primary);
+    --popover: var(--app-card-base);
+    --popover-foreground: var(--app-text-primary);
+    --primary: var(--app-accent-start);
+    --primary-foreground: var(--app-text-light);
+    --secondary: var(--app-navbar);
+    --secondary-foreground: var(--app-text-light);
+    --muted: var(--app-card-base);
+    --muted-foreground: var(--app-text-secondary);
+    --accent: var(--app-accent-start);
+    --accent-foreground: var(--app-text-light);
+    --destructive: var(--app-error);
+    --destructive-foreground: var(--app-text-light);
+    --border: var(--app-text-secondary);
+    --input: var(--app-card-base);
+    --ring: var(--app-accent-start);
+    --radius: var(--radius-large);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply text-foreground font-inter;
+    background: var(--gradient-bg);
+    min-height: 100vh;
+  }
+  
+  /* Clases auxiliares para glassmorphism */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--blur-strength));
+    -webkit-backdrop-filter: blur(var(--blur-strength));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+  
+  .glass-card {
+    @apply glass rounded-3xl;
+  }
+  
+  .floating-notification {
+    @apply glass rounded-2xl;
+    box-shadow: var(--shadow-floating);
+  }
+}
